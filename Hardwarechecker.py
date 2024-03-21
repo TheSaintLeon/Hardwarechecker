@@ -1,48 +1,75 @@
-from tkinter import *   
-from platform import * 
+from customtkinter import *
+from platform import *
 from psutil import *
 from socket import *
+from PIL import *
 
-# Oppretter et Tkinter-vindu
-window = Tk()
-window.title("Systeminformasjonssjekker")
-window.geometry('1000x700')  # Angir størrelsen på vinduet
-window.tk.call('tk', 'scaling', 2.0)  # Skalerer vinduet
+# Vinduet til selve programmet
+app = CTk()
+app.geometry("1000x700")
+app.title("Hardware Checker")
+set_appearance_mode("dark")
 
-# Oppretter etikett og knapp
-lbl = Label(window, text="Velkommen til vår maskinvare sjekker")
-lbl.grid(column=0, row=0, pady=(10, 0)) 
-lbl.config(font=("Arial", 15))  # Angir skriftstørrelse
+def delete_button_and_print():
+    print("Button pressed! Text displayed after button press")
+    btn1.destroy()
 
-# Funksjon for å opprette og konfigurere etiketter
-def create_label(text, row):
-    lbl = Label(window, text=text, wraplength=300)
-    lbl.grid(column=0, row=row, pady=(10, 0))
-    lbl.config(font=("Arial", 15))
+    # Create and place the label after the button is pressed
+    y_start = 0.2  # Adjust this value to set the starting vertical position
+    y_increment = 0.05  # Adjust this value to set the vertical spacing between labels
+    y = y_start
 
-# Funksjon som kjøres når knappen trykkes
-def search(e):
-    btnOk.grid_remove()  # Fjerner knappen
+    labels = []  # List to store labels
+    label = CTkLabel(master=app, text="OS: {}".format(system()), font=("Arial", 20))
+    label.place(relx=0.5, rely=y, anchor=CENTER)
+    labels.append(label)
+    y += y_increment
 
-    # Oppretter og viser etiketter med systeminformasjon
-    create_label("OS: " + system(), 2)
-    create_label("OS-versjon: " + version(), 3)
-    create_label("OS-plattform: " + platform(), 4)
-    create_label("Prosessor: " + processor(), 5)
-    create_label("Antall CPU-er: " + str(cpu_count()), 6)
+    label = CTkLabel(master=app, text="OS-Versjon: {}".format(version()), font=("Arial", 20))
+    label.place(relx=0.5, rely=y, anchor=CENTER)
+    labels.append(label)
+    y += y_increment
+
+    label = CTkLabel(master=app, text="OS-Platform: {}".format(platform()), font=("Arial", 20))
+    label.place(relx=0.5, rely=y, anchor=CENTER)
+    labels.append(label)
+    y += y_increment
+
+    label = CTkLabel(master=app, text="Processor: {}".format(processor()), font=("Arial", 20))
+    label.place(relx=0.5, rely=y, anchor=CENTER)
+    labels.append(label)
+    y += y_increment
+
+    label = CTkLabel(master=app, text="Processor Cores: {}".format(cpu_count()), font=("Arial", 20))
+    label.place(relx=0.5, rely=y, anchor=CENTER)
+    labels.append(label)
+    y += y_increment
+
     total_memory_gb = virtual_memory().total / (1024 ** 3)  # Konverterer til GB 
-    create_label("Minne: " + "{:.2f}".format(total_memory_gb) + " GB", 7)
-    create_label("IP-adresse: " + gethostbyname(gethostname()), 8)
+    label = CTkLabel(master=app, text="RAM: {:.2f} GB".format(total_memory_gb), font=("Arial", 20))
+    label.place(relx=0.5, rely=y, anchor=CENTER)
+    labels.append(label)
 
-# Oppretter knappen
-btnOk = Button(window, text="Start søk")
-btnOk.grid(column=0, row=1, pady=(50, 0), padx=(10, 10))
-btnOk.config(font=("Arial", 20))  
-btnOk.bind("<Button-1>", search)
+    # Add a new button with the same function for new labels
+    nextbtn = CTkButton(master=app, text="Neste steg", corner_radius=32, fg_color="#0000FF",
+                           hover_color="#4158D0", command=lambda: next_btn(nextbtn, labels, btn1))
+    nextbtn.place(relx=0.5, rely=0.50, anchor=CENTER)
 
-# Konfigurerer rutenettet for vinduet
-window.grid_rowconfigure(8, weight=1)
-window.grid_columnconfigure(0, weight=1)  
+def next_btn(button, labels, button1):
+    # Destroy all labels and buttons
+    for label in labels:
+        label.destroy()
+    button.destroy()
+    button1.destroy()
 
-# Starter hovedloopen for Tkinter-vinduet
-window.mainloop()
+# Label som viser velkomstteksten
+label = CTkLabel(master=app, text="Velkommen til vår hardware checker", font=("Arial", 30))
+label.place(relx=0.5, rely=0.1, anchor=CENTER)
+
+# Knapp som lar deg stare søket etter hardware
+btn1 = CTkButton(master=app, text="Sjekk hardware", corner_radius=32, fg_color="#0000FF",
+                hover_color="#4158D0", command=delete_button_and_print)
+btn1.place(relx=0.5, rely=0.5, anchor=CENTER)
+btn1.configure(width=150, height=50)  # Endrer høyde og bredde på knappen
+
+app.mainloop()
