@@ -11,15 +11,15 @@ app.title("Hardware Checker")
 set_appearance_mode("dark")
 
 def delete_button_and_print():
-    print("Button pressed! Text displayed after button press")
+    print("Sletter knappen")
     btn1.destroy()
 
-    # Create and place the label after the button is pressed
-    y_start = 0.2  # Adjust this value to set the starting vertical position
-    y_increment = 0.05  # Adjust this value to set the vertical spacing between labels
+    # Lager tekst når knappen er klikket på
+    y_start = 0.2  # Plass mellom teksten vertikalt
+    y_increment = 0.05  # Plass mellom hver tekst
     y = y_start
 
-    labels = []  # List to store labels
+    labels = []  # Liste til å lagre labels
     label = CTkLabel(master=app, text="OS: {}".format(system()), font=("Arial", 20))
     label.place(relx=0.5, rely=y, anchor=CENTER)
     labels.append(label)
@@ -45,18 +45,18 @@ def delete_button_and_print():
     labels.append(label)
     y += y_increment
 
-    total_memory_gb = virtual_memory().total / (1024 ** 3)  # Konverterer til GB 
+    total_memory_gb = virtual_memory().total / (1024 ** 3)  # Endrer til GB
     label = CTkLabel(master=app, text="RAM: {:.2f} GB".format(total_memory_gb), font=("Arial", 20))
     label.place(relx=0.5, rely=y, anchor=CENTER)
     labels.append(label)
 
-    # Add a new button with the same function for new labels
+    # Lager en ny knapp for å gå over til neste skjerm
     nextbtn = CTkButton(master=app, text="Neste steg", corner_radius=32, fg_color="#0000FF",
                            hover_color="#4158D0", command=lambda: next_btn(nextbtn, labels, btn1))
     nextbtn.place(relx=0.5, rely=0.50, anchor=CENTER)
 
 def next_btn(button, labels, button1):
-    # Destroy all labels and buttons
+    # Sletter alt av informasjonen
     for label in labels:
         label.destroy()
     button.destroy()
@@ -66,7 +66,7 @@ def next_btn(button, labels, button1):
 label = CTkLabel(master=app, text="Velkommen til vår hardware checker", font=("Arial", 30))
 label.place(relx=0.5, rely=0.1, anchor=CENTER)
 
-# Knapp som lar deg stare søket etter hardware
+# Knapp som lar deg starte søket etter hardware
 btn1 = CTkButton(master=app, text="Sjekk hardware", corner_radius=32, fg_color="#0000FF",
                 hover_color="#4158D0", command=delete_button_and_print)
 btn1.place(relx=0.5, rely=0.5, anchor=CENTER)
